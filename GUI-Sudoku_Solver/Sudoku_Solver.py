@@ -1,52 +1,5 @@
 from tkinter import * 
-
-choice = StringVar()
-answer = [
-    [7,8,0,4,0,0,1,2,0],
-    [6,0,0,0,7,5,0,0,9],
-    [0,0,0,6,0,1,0,7,8],
-    [0,0,7,0,4,0,2,6,0],
-    [0,0,1,0,5,0,9,3,0],
-    [9,0,4,0,6,0,0,0,5],
-    [0,7,0,3,0,0,0,1,2],
-    [1,2,0,0,0,7,4,0,0],
-    [0,4,9,2,0,6,0,0,7]
-] 
-board1 =  [
-    [7,8,0,4,0,0,1,2,0],
-    [6,0,0,0,7,5,0,0,9],
-    [0,0,0,6,0,1,0,7,8],
-    [0,0,7,0,4,0,2,6,0],
-    [0,0,1,0,5,0,9,3,0],
-    [9,0,4,0,6,0,0,0,5],
-    [0,7,0,3,0,0,0,1,2],
-    [1,2,0,0,0,7,4,0,0],
-    [0,4,9,2,0,6,0,0,7]
-        ]
-board2 = [
-    [7,8,0,4,0,0,1,2,0],
-    [6,0,0,0,7,5,0,0,9],
-    [0,0,0,6,0,1,0,7,8],
-    [0,0,7,0,4,0,2,6,0],
-    [0,0,1,0,5,0,9,3,0],
-    [9,0,4,0,6,0,0,0,5],
-    [0,7,0,3,0,0,0,1,2],
-    [1,2,0,0,0,7,4,0,0],
-    [0,4,9,2,0,6,0,0,7]
-
-]
-
-
-win = Tk()
-win.title("Sudoku")
-win.geometry("700x800")
-win.configure(bg="#1f1f1f")
-win.resizable(False,False)
-SIDE = 60
-WIDTH = 540
-HEIGHT = 540
-border_thickness = 4
-
+import copy
 
 #to check if cell is empty/0 in the sudoku
 def empty_box(sudo):
@@ -93,26 +46,28 @@ def solver(sudo):
                 sudo[row][col] = 0
     
     return False
-        
+    
 
-# to find the positions where 0 exists in the sudoku
-zero_pos = []
-for i in range(9):
-    for j in range(9):
-        if board1[i][j] == 0:
-            zero_pos.append((i,j)) 
-
+# Global variables        
+win = Tk()
+win.title("Sudoku")
+win.geometry("700x800")
+win.configure(bg="#1f1f1f")
+win.resizable(False,False)
+SIDE = 60
+WIDTH = 540
+HEIGHT = 540
+border_thickness = 4
 
 
 # class for creating question sudoku board and input sudoku board function
 class dokuSolver(object):
     def __init__(self):
         self.question = []
-        self.question = board1
 
     def game_start(self):
         self.input_board = []
-        self.input_board = board2
+        self.answer = [] 
         
 
     
@@ -127,7 +82,43 @@ class dokuUI(Frame):
         self.cur_x = -1
         self.cur_y = -1
         self.item = {}
+        self.choice = StringVar()
         self.create_board()
+        
+# to choose the board from respective text files
+    def submit_board(self):
+        bo = ['one','two','three','four']
+        li1= []
+        if self.choice.get() in bo:
+            with open("%s.txt" % self.choice.get(),'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    if line[-1] == '\n':
+                        li1.append(list(map(int,line[:-1])))
+                    else:
+                        li1.append(list(map(int,line[:])))
+
+        self.doku.answer = copy.deepcopy(li1)
+        self.doku.question = copy.deepcopy(li1)
+        self.doku.input_board = copy.deepcopy(li1)
+        self.menu.destroy()
+        self.lb.destroy()
+        self.bt.destroy()
+        self.e.destroy()
+        solver(self.doku.answer)
+        self.create_num_board()
+
+    # to create a window to choose the question
+    def board_selection(self):
+        self.menu = Canvas(win,width=300,height=130,bg="black",highlightbackground="red")
+        self.menu.place(x = 200 ,y =150)
+        self.lb = Label(win,text = "Choose Board.\nEnter text between one to four")
+        self.bt = Button(win,text="Submit",width=20,height=1,command=self.submit_board)
+        self.e = Entry(win,textvariable = self.choice,width=25)
+        self.lb.place(x = 250,y = 155)
+        self.bt.place(x = 240,y=240)
+        self.e.place(x=236,y=205)
+
 
     # basic layout the gui    
     def create_board(self):
@@ -153,9 +144,10 @@ class dokuUI(Frame):
         solve_bt.place(x=525,y=600)
 
         self.sudoku_board.bind("<Button-1>",self._click)
-        self.sudoku_board.bind("<Key>",self._keypress)  
+        self.sudoku_board.bind("<Key>",self._keypress)
 
-        self.create_num_board()
+        self.board_selection()
+
     
     # to draw the layout when the sudoku puzzle is solved successfully
     def draw_won(self):
@@ -168,7 +160,7 @@ class dokuUI(Frame):
     
     # to check if the board was solved
     def is_complete(self):
-        if self.doku.input_board == answer:
+        if self.doku.input_board == self.doku.answer:
             self.draw_won()
         else:
             lb = Label(win,text="Wrong Answer!",fg = "red")
@@ -177,7 +169,12 @@ class dokuUI(Frame):
 
     # to create the initial question board
     def create_num_board(self):
-        self.sudoku_board.delete("que")
+        self.zero_pos = []
+        for i in range(9):
+            for j in range(9):
+                if self.doku.question[i][j] == 0:
+                    self.zero_pos.append((i,j)) 
+        self.sudoku_board.delete("num")
         for i in range(9):
             for j in range(9):
                 value = self.doku.question[i][j]
@@ -216,7 +213,7 @@ class dokuUI(Frame):
         self.sudoku_board.delete("won")
         self.sudoku_board.delete("temp") 
         self.design_pointer()
-        for (i,j) in zero_pos:
+        for (i,j) in self.zero_pos:
             self.doku.input_board[i][j] = 0
 
     # to update the value of the input board whenever a number is added in the cell
@@ -243,11 +240,9 @@ class dokuUI(Frame):
         
 # program's main driver function
 if __name__ == '__main__':
-    solver(answer)
     game = dokuSolver()
     game.game_start()
     dokuUI(win,game)
     win.mainloop()
-
 
 
