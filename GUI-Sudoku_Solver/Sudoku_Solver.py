@@ -1,15 +1,15 @@
-from tkinter import *  
-from tkinter import messagebox
-import copy
+from tkinter import *  # importing all functions/modules of tkinter package
+from tkinter import messagebox # importing  messagebox module from tkinter package
+import copy # importing copy module to use deepcopy function
 
-#to check if cell is empty/0 in the sudoku
+# to check if cell is empty (or) 0 in the sudoku
 def empty_box(sudo):
     for i in range(len(sudo)):
         for j in range(len(sudo[0])):
             if sudo[i][j] == 0:
                 return (i,j)
 
-#to validate whether the board is right or wrong
+# to validate whether the board is correctly filled or not
 def validate_board(sudo,pos,num):
     for i in range(len(sudo[0])):
         if sudo[pos[0]][i] == num and pos[1] != i:
@@ -88,16 +88,19 @@ class dokuUI(Frame):
         
 # to choose the board from respective text files
     def submit_board(self):
-        bo = ['1','2','3','4']
-        li1= []
+        bo = ['1','2','3','4'] # a list to strore all the sudoku board files
+        li1= [] # a list to create the sudoku board from the .txt files
         if self.choice.get() in bo:
             with open("%s.txt" % self.choice.get(),'r') as f:
                 lines = f.readlines()
                 for line in lines:
-                    if line[-1] == '\n':
+                    if line[-1] == '\n': #removing the next line escape character
                         li1.append(list(map(int,line[:-1])))
                     else:
                         li1.append(list(map(int,line[:])))
+            
+            # deep copy copies the value from one variable and transfers it to another variable with differnet space memory 
+            # rather than refrencing the value of that copying variable
             
             self.doku.answer = copy.deepcopy(li1)
             self.doku.question = copy.deepcopy(li1)
@@ -109,6 +112,7 @@ class dokuUI(Frame):
             solver(self.doku.answer)
             self.create_num_board()
         else:
+            # if the value of the choice variable is invalid , an error screen will be projected
             self.menu.destroy()
             self.lb.destroy()
             self.bt.destroy()
@@ -127,9 +131,6 @@ class dokuUI(Frame):
         self.lb.place(x = 253,y = 155)
         self.bt.place(x = 240,y=240)
         self.e.place(x=212,y=205)
-
-
-
 
     # basic layout the gui    
     def create_board(self):
