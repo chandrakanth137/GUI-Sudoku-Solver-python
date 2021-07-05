@@ -13,4 +13,9 @@ How to run this GUI Sudoku Solver:
   2. Use 'cd directory_name' (replace directory_name with your respective directory) command and move to the downloaded 'Sudoku' folder
   3. type the following command to run it
       "python3 Sudoku_Solver.py"  (or)    "python Sudoku_Solver.py"
+      
+      
+      
+      ![Image of Yaktocat]
+      (https://octodex.github.com/images/yaktocat.png)
   
