@@ -16,6 +16,6 @@ How to run this GUI Sudoku Solver:
       
       
       
-      ![Image of Yaktocat]
-      (https://octodex.github.com/images/yaktocat.png)
+      ![Image of GUI Sudoku Solver]
+      (https://github.com/chandrakanth137/GUI-Sudoku-Solver-python/images/sudoku1.png)
   
