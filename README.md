@@ -3,8 +3,8 @@
 This is a Python GUI Sudoku Solver using tkinter module
 
 Prerequisites to run this GUI Sudoku Solver:
-  Python 3.x 
-  Tkinter (usually comes pre-installed with Python)
+  1.Python 3.x 
+  2.Tkinter (usually comes pre-installed with Python)
  
 How to run this GUI Sudoku Solver:
   1. Open command prompt / Terminal (depending upon the OS) .
