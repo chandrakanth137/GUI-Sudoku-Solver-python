@@ -17,5 +17,5 @@ How to run this GUI Sudoku Solver:
       
       
       ![Image of GUI Sudoku Solver]
-      (https://github.com/chandrakanth137/GUI-Sudoku-Solver-python/images/sudoku1.png?raw=true)
+      (https://github.com/chandrakanth137/GUI-Sudoku-Solver-python/blob/images/sudoku1.png?raw=true)
   
