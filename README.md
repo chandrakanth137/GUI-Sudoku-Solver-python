@@ -15,7 +15,5 @@ How to run this GUI Sudoku Solver:
       "python3 Sudoku_Solver.py"  (or)    "python Sudoku_Solver.py"
       
       
-      
-      ![Image of GUI Sudoku Solver]
-      (https://github.com/chandrakanth137/GUI-Sudoku-Solver-python/blob/images/sudoku1.png?raw=true)
+  ![Image of GUI Sudoku Solver](https://github.com/chandrakanth137/GUI-Sudoku-Solver-python/blob/images/sudoku1.png?raw=true)
   
