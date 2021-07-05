@@ -1,4 +1,5 @@
-from tkinter import * 
+from tkinter import *  
+from tkinter import messagebox
 import copy
 
 #to check if cell is empty/0 in the sudoku
@@ -87,7 +88,7 @@ class dokuUI(Frame):
         
 # to choose the board from respective text files
     def submit_board(self):
-        bo = ['one','two','three','four']
+        bo = ['1','2','3','4']
         li1= []
         if self.choice.get() in bo:
             with open("%s.txt" % self.choice.get(),'r') as f:
@@ -97,27 +98,37 @@ class dokuUI(Frame):
                         li1.append(list(map(int,line[:-1])))
                     else:
                         li1.append(list(map(int,line[:])))
+            
+            self.doku.answer = copy.deepcopy(li1)
+            self.doku.question = copy.deepcopy(li1)
+            self.doku.input_board = copy.deepcopy(li1)
+            self.menu.destroy()
+            self.lb.destroy()
+            self.bt.destroy()
+            self.e.destroy()
+            solver(self.doku.answer)
+            self.create_num_board()
+        else:
+            self.menu.destroy()
+            self.lb.destroy()
+            self.bt.destroy()
+            self.e.destroy()
+            messagebox.showinfo('Invalid Choice','Entered value out of range')
+            self.board_selection()
 
-        self.doku.answer = copy.deepcopy(li1)
-        self.doku.question = copy.deepcopy(li1)
-        self.doku.input_board = copy.deepcopy(li1)
-        self.menu.destroy()
-        self.lb.destroy()
-        self.bt.destroy()
-        self.e.destroy()
-        solver(self.doku.answer)
-        self.create_num_board()
 
     # to create a window to choose the question
     def board_selection(self):
         self.menu = Canvas(win,width=300,height=130,bg="black",highlightbackground="red")
         self.menu.place(x = 200 ,y =150)
-        self.lb = Label(win,text = "Choose Board.\nEnter text between one to four")
-        self.bt = Button(win,text="Submit",width=20,height=1,command=self.submit_board)
-        self.e = Entry(win,textvariable = self.choice,width=25)
-        self.lb.place(x = 250,y = 155)
+        self.lb = Label(win,text = "Choose Board.\nEnter number between 1 - 4",fg='white',bg='black')
+        self.bt = Button(win,text="Submit",width=20,height=1,command=self.submit_board,highlightbackground='black')
+        self.e = Entry(win,textvariable = self.choice,width=30,bg='black',fg='white')
+        self.lb.place(x = 253,y = 155)
         self.bt.place(x = 240,y=240)
-        self.e.place(x=236,y=205)
+        self.e.place(x=212,y=205)
+
+
 
 
     # basic layout the gui    
@@ -163,8 +174,8 @@ class dokuUI(Frame):
         if self.doku.input_board == self.doku.answer:
             self.draw_won()
         else:
-            lb = Label(win,text="Wrong Answer!",fg = "red")
-            lb.place(x=300,y=600)
+            lb = Label(win,text="Wrong Answer!",fg = "red",bg="black",font= ('Arial Bold',30,))
+            lb.place(x=247,y=600)
             self.after(2000,lb.destroy)
 
     # to create the initial question board
