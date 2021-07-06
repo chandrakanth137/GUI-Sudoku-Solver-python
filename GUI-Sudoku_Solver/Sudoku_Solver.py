@@ -1,15 +1,15 @@
-from tkinter import *  # importing all functions/modules of tkinter package
-from tkinter import messagebox # importing  messagebox module from tkinter package
-import copy # importing copy module to use deepcopy function
+from tkinter import *  
+from tkinter import messagebox # to display error message box
+import copy # to use deepcopy function
 
-# to check if cell is empty (or) 0 in the sudoku
+#to check if cell is empty/0 in the sudoku
 def empty_box(sudo):
     for i in range(len(sudo)):
         for j in range(len(sudo[0])):
             if sudo[i][j] == 0:
                 return (i,j)
 
-# to validate whether the board is correctly filled or not
+#to validate whether the board is right or wrong
 def validate_board(sudo,pos,num):
     for i in range(len(sudo[0])):
         if sudo[pos[0]][i] == num and pos[1] != i:
@@ -46,8 +46,7 @@ def solver(sudo):
 
                 sudo[row][col] = 0
     
-    return False
-    
+    return False   
 
 # Global variables        
 win = Tk()
@@ -60,7 +59,6 @@ WIDTH = 540
 HEIGHT = 540
 border_thickness = 4
 
-
 # class for creating question sudoku board and input sudoku board function
 class dokuSolver(object):
     def __init__(self):
@@ -69,9 +67,7 @@ class dokuSolver(object):
     def game_start(self):
         self.input_board = []
         self.answer = [] 
-        
-
-    
+            
 # class to create the GUI for the sudoko board 
 class dokuUI(Frame):
     def __init__(self,main_screen,doku):
@@ -88,19 +84,16 @@ class dokuUI(Frame):
         
 # to choose the board from respective text files
     def submit_board(self):
-        bo = ['1','2','3','4'] # a list to strore all the sudoku board files
-        li1= [] # a list to create the sudoku board from the .txt files
+        bo = ['1','2','3','4']
+        li1= []
         if self.choice.get() in bo:
             with open("%s.txt" % self.choice.get(),'r') as f:
                 lines = f.readlines()
                 for line in lines:
-                    if line[-1] == '\n': #removing the next line escape character
+                    if line[-1] == '\n':
                         li1.append(list(map(int,line[:-1])))
                     else:
                         li1.append(list(map(int,line[:])))
-            
-            # deep copy copies the value from one variable and transfers it to another variable with differnet space memory 
-            # rather than refrencing the value of that copying variable
             
             self.doku.answer = copy.deepcopy(li1)
             self.doku.question = copy.deepcopy(li1)
@@ -112,14 +105,12 @@ class dokuUI(Frame):
             solver(self.doku.answer)
             self.create_num_board()
         else:
-            # if the value of the choice variable is invalid , an error screen will be projected
             self.menu.destroy()
             self.lb.destroy()
             self.bt.destroy()
             self.e.destroy()
             messagebox.showinfo('Invalid Choice','Entered value out of range')
             self.board_selection()
-
 
     # to create a window to choose the question
     def board_selection(self):
@@ -131,7 +122,7 @@ class dokuUI(Frame):
         self.lb.place(x = 253,y = 155)
         self.bt.place(x = 240,y=240)
         self.e.place(x=212,y=205)
-
+    
     # basic layout the gui    
     def create_board(self):
         self.sudoku_board = Canvas(win, width= 540, height = 540, bg="white", highlightbackground="black")
@@ -148,19 +139,8 @@ class dokuUI(Frame):
              self.sudoku_board.create_line(i*SIDE, 0 , i*SIDE, HEIGHT+border_thickness ,fill="black") 
 
         self.sudoku_board.pack(padx=20,pady=20)
-
-        clear_bt = Button(win, text="Clear", width=8, height=2,command=self.clear_board)
-        clear_bt.place(x=75,y=600)
-
-        solve_bt = Button(win, text="Check", width=8, height=2,command=self.is_complete)
-        solve_bt.place(x=525,y=600)
-
-        self.sudoku_board.bind("<Button-1>",self._click)
-        self.sudoku_board.bind("<Key>",self._keypress)
-
         self.board_selection()
 
-    
     # to draw the layout when the sudoku puzzle is solved successfully
     def draw_won(self):
         x0 = y0 = border_thickness + SIDE * 2
@@ -181,6 +161,14 @@ class dokuUI(Frame):
 
     # to create the initial question board
     def create_num_board(self):
+        clear_bt = Button(win, text="Clear", width=8, height=2,command=self.clear_board)
+        clear_bt.place(x=75,y=600)
+
+        solve_bt = Button(win, text="Check", width=8, height=2,command=self.is_complete)
+        solve_bt.place(x=525,y=600)
+
+        self.sudoku_board.bind("<Button-1>",self._click)
+        self.sudoku_board.bind("<Key>",self._keypress)
         self.zero_pos = []
         for i in range(9):
             for j in range(9):
@@ -208,7 +196,6 @@ class dokuUI(Frame):
             else:
                 self.sudoku_board.delete(self.item[(x,y)])
                 self.item[(x,y)] = self.sudoku_board.create_text(x,y,text = value,tags="temp",fill= "SteelBlue1" ,font=('Arial','30','bold'))
-
 
     # to draw the outline when a cell is clicked
     def design_pointer(self):
