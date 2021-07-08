@@ -25,49 +25,64 @@ def print_board(sudo):
                 print(str(sudo[i][j]) + " ", end =" ")
                 
 
-def empty_box(sudo):
-    for i in range(len(sudo)):
-        for j in range(len(sudo[0])):
-            if sudo[i][j] == 0:
-                return (i,j)
+# to find the empty cells in the sudoku
+def find_empty_location(arr, l):
+    for row in range(9):
+        for col in range(9):
+            if(arr[row][col]== 0):
+                l[0]= row
+                l[1]= col
+                return True
+    return False
 
+# to check if the input value already exists or not in that row 
+def used_in_row(arr, row, num):
+    for i in range(9):
+        if(arr[row][i] == num):
+            return True
+    return False
 
-def validate_board(sudo,pos,num):
-    for i in range(len(sudo[0])):
-        if sudo[pos[0]][i] == num and pos[1] != i:
-            return False
-        
-    for i in range(len(sudo)):    
-        if sudo[i][pos[1]] == num and pos[0] != i:
-             return False
+# to check if the input value already exists or not in that column  
+def used_in_col(arr, col, num):
+    for i in range(9):
+        if(arr[i][col] == num):
+            return True
+    return False
+ 
+# to check if that value is used already exists in the 3x3 grid or not
+def used_in_box(arr, row, col, num):
+    for i in range(3):
+        for j in range(3):
+            if(arr[i + row][j + col] == num):
+                return True
+    return False
 
-    coord_x = pos[1] // 3
-    coord_y = pos[0] // 3
+# to check if value is fit enough to be in that cell 
+def check_location_is_safe(arr, row, col, num):
+    return not used_in_row(arr, row, num) and not used_in_col(arr, col, num) and not used_in_box(arr, row - row % 3, col - col % 3, num)
 
-    for i in range(coord_y * 3 , coord_y * 3 + 3):
-        for j in range(coord_x * 3 , coord_x * 3 + 3):
-            if sudo[i][j] == num and (i, j) == pos:
-                return False
-    
-    return True
-
-
-def solver(sudo):
-    empty = empty_box(sudo)
-    if not empty:
+# sudoku solver driver function
+def solver(arr):
+    l =[0, 0]
+     
+    if(not find_empty_location(arr, l)):
         return True
-    else:
-        row , col = empty
-        for i in range(10):
-            if validate_board(sudo, (row,col), i):
 
-                sudo[row][col] = i
-
-                if solver(sudo):
-                    return True
-
-                sudo[row][col] = 0
-    
+    row = l[0]
+    col = l[1]
+     
+    for num in range(1, 10):
+         
+        if(check_location_is_safe(arr,
+                          row, col, num)):
+             
+            arr[row][col]= num
+ 
+            if(solver(arr)):
+                return True
+ 
+            arr[row][col] = 0
+                  
     return False
         
 
