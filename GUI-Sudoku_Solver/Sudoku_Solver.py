@@ -133,8 +133,8 @@ class dokuUI(Frame):
         self.lb = Label(win,text = "Choose Board.\nEnter number between 1 - 4",fg='white',bg='black')
         self.bt = Button(win,text="Submit",width=20,height=1,command=self.submit_board,highlightbackground='black')
         self.e = Entry(win,textvariable = self.choice,width=30,bg='black',fg='white')
-        self.lb.place(x = 253,y = 155)
-        self.bt.place(x = 240,y=240)
+        self.lb.place(x=253,y = 155)
+        self.bt.place(x=240,y=240)
         self.e.place(x=212,y=205)
     
     # basic layout the gui    
@@ -169,20 +169,20 @@ class dokuUI(Frame):
         if self.doku.input_board == self.doku.answer:
             self.draw_won()
         else:
-            lb = Label(win,text="Wrong Answer!",fg = "red",bg="black",font= ('Arial Bold',30,))
+            lb = Label(win,text="Wrong Answer!",fg = "red",bg="black",font=('Arial Bold',30,))
             lb.place(x=247,y=650)
             self.after(2000,lb.destroy) 
 
     def solve_it(self):
-        solver(self.doku.input_board)
+        self.sudoku_board.delete("temp")
         for i in range(9):
             for j in range(9):
-                value = self.doku.input_board[i][j]
+                value = self.doku.answer[i][j]
                 if value != 0 and (i,j) in self.zero_pos: 
                     x = border_thickness + j * SIDE + SIDE/2
                     y = border_thickness + i * SIDE + SIDE/2
-                    self.sudoku_board.create_text(x,y,text = value,tags="temp",fill="firebrick2",font=('Arial','30','bold'))
-                    lb = Label(win,text="Auto Solved",fg = "Cyan2",bg="black",font= ('Arial Bold',30,))
+                    self.sudoku_board.create_text(x,y,text = value,tags="auto",fill="firebrick2",font=('Arial','30','bold'))
+                    lb = Label(win,text="Auto Solved",fg = "Cyan2",bg="black",font= ('Arial Bold',30))
                     lb.place(x=255,y=650)
                     self.after(3000,lb.destroy)
 
@@ -197,6 +197,12 @@ class dokuUI(Frame):
 
         solution_bt = Button(win, text ="Solve", width=8, height=2,command=self.solve_it)
         solution_bt.place(x=300,y=600)
+
+        quit_bt = Button(win,text='X',fg='red',highlightbackground='black',width=1,height=1,command = lambda : win.quit())
+        quit_bt.place(x=640,y=10)
+
+        quit_lb = Label(win,text='Quit',fg='red',bg='black',font=('Arial',15))
+        quit_lb.place(x=645,y=38)
 
         self.sudoku_board.bind("<Button-1>",self._click)
         self.sudoku_board.bind("<Key>",self._keypress)
@@ -240,6 +246,7 @@ class dokuUI(Frame):
 
     #to clear the entered numbers in the board
     def clear_board(self):
+        self.sudoku_board.delete("auto")
         self.sudoku_board.delete("won")
         self.sudoku_board.delete("temp") 
         self.design_pointer()
