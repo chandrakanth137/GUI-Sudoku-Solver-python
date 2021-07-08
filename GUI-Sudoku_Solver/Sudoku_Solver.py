@@ -181,7 +181,10 @@ class dokuUI(Frame):
                 if value != 0 and (i,j) in self.zero_pos: 
                     x = border_thickness + j * SIDE + SIDE/2
                     y = border_thickness + i * SIDE + SIDE/2
-                    self.sudoku_board.create_text(x,y,text = value,tags="temp",fill="Cyan",font=('Arial','30','bold'))
+                    self.sudoku_board.create_text(x,y,text = value,tags="temp",fill="firebrick2",font=('Arial','30','bold'))
+                    lb = Label(win,text="Auto Solved",fg = "Cyan2",bg="black",font= ('Arial Bold',30,))
+                    lb.place(x=255,y=650)
+                    self.after(3000,lb.destroy)
 
 
     # to create the initial question board
